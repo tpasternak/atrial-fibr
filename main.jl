@@ -40,8 +40,9 @@ function evalIntervalNumbers(X)
 end
 
 function getSetName(setPath)
-
+    return split(setPath, "/")[2]
 end
+@test getSetName("a/b") =="b"
 
 function downloadAllFiles(input)
     const root = "http://www.physionet.org/physiobank/database/"
@@ -53,16 +54,15 @@ function downloadAllFiles(input)
     command = `wget -Nq $address.hea`
     success(command)
 
-    command = `ann2rr -r e0103 -a atr`
-
+    setName = getSetName(input)
+    command = `ann2rr -r $setName -a atr`
+    setenv(command,["LD_PRELOAD=libcurl.so"])
     stream, process = readsfrom(command)
     return stream
 end
 
-
-
 function main()
-    stream = downloadAllFiles("edb/e0103")
+    stream = downloadAllFiles("edb/e0107")
     lines = readlines(stream)
     distances = map ((x) -> int(strip(x)), lines)[2:]
     markovTransitions = markovChainTransitions(distances)
