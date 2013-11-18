@@ -39,15 +39,33 @@ function evalIntervalNumbers(X)
     return map((x) -> classify(x,[m*0.85 m*1.15]), X)
 end
 
+function getSetName(setPath)
+
+end
+
+function downloadAllFiles(input)
+    const root = "http://www.physionet.org/physiobank/database/"
+    address = root * input
+    command = `wget -Nq $address.dat`
+    success(command)
+    command = `wget -Nq $address.atr`
+    success(command)
+    command = `wget -Nq $address.hea`
+    success(command)
+
+    command = `ann2rr -r e0103 -a atr`
+
+    stream, process = readsfrom(command)
+    return stream
+end
+
+
+
 function main()
-    datalength= 7000
-    file = open("00735.rr1.txt", "r")
-    X=zeros(Float64,datalength)
-    readline(file)
-    for i = 1:datalength
-        X[i] = float(readline(file))
-    end
-    markovTransitions = markovChainTransitions(X)
+    stream = downloadAllFiles("edb/e0103")
+    lines = readlines(stream)
+    distances = map ((x) -> int(strip(x)), lines)[2:]
+    markovTransitions = markovChainTransitions(distances)
 end
 
 main()
