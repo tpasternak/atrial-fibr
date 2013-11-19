@@ -1,8 +1,9 @@
 using AtrialFibr
 using ArgParse
+using DataDownloader
 
 function execute(set)
-    distances = AtrialFibr.heartRateSeries(set)
+    distances = DataDownloader.heartRateSeries(set)
     markovTransitions = AtrialFibr.markovChainTransitions(distances)
     showcompact(markovTransitions)
     println("")
