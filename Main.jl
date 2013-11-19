@@ -3,9 +3,10 @@ using ArgParse
 using DataDownloader
 
 function execute(set)
-    distances = DataDownloader.heartRateSeries(set)
-    markovTransitions = AtrialFibr.markovChainTransitions(distances)
-    showcompact(markovTransitions)
+    set |>
+    DataDownloader.heartRateSeries |>
+    AtrialFibr.markovChainTransitions |>
+    showcompact
     println("")
 end
 
