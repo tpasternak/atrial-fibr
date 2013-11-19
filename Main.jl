@@ -1,10 +1,8 @@
-import AtrialFibr
+using AtrialFibr
 using ArgParse
 
 function execute(set)
-    stream = AtrialFibr.downloadAllFiles(set)
-    lines = readlines(stream)
-    distances = map ((x) -> int(strip(x)), lines)[2:]
+    distances = AtrialFibr.heartRateSeries(set)
     markovTransitions = AtrialFibr.markovChainTransitions(distances)
     showcompact(markovTransitions)
     println("")
@@ -17,8 +15,7 @@ function main(args)
             nargs = 1
     end
     parsed_args = parse_args(s)
-
     execute(parsed_args["dataset"][1])
 end
 
-main(ARGS)
+execute("fantasia/f1o06")

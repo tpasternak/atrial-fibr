@@ -41,26 +41,48 @@ module AtrialFibr
     end
 
     function getSetName(setPath)
-        return split(setPath, "/")[2]
+        return split(setPath, "/")[end]
     end
     @test getSetName("a/b") =="b"
+    @test getSetName("a/b/c") =="c"
 
-    function downloadAllFiles(input)
-        const root = "http://www.physionet.org/physiobank/database/"
-        address = root * input
-        command = `wget -Nq $address.dat`
-        success(command)
-        command = `wget -Nq $address.atr`
-        success(command)
-        command = `wget -Nq $address.hea`
-        success(command)
+    function downloadAttributeFile(address)
+        for extension in ["atr" "ecg"]
+            if(success(`wget -Nq $address.$extension`))
+                return extension
+            end
+        end
+    end
 
-        setName = getSetName(input)
-        command = `ann2rr -r $setName -a atr`
+    function downloadDatFile(address)
+        return success(`wget -Nq $address.dat`)
+    end
+
+    function downloadHeaderFile(address)
+        return success(`wget -Nq $address.hea`)
+    end
+
+    function ann2rr(setName, extension)
+        command = `ann2rr -r $setName -a $extension`
         setenv(command,["LD_PRELOAD=libcurl.so"])
         stream, process = readsfrom(command)
         return stream
     end
 
-    export downloadAllFiles, markovChainTransitions
+    function heartRateStream(address)
+        downloadHeaderFile(address)
+        downloadDatFile(address)
+        const extension = downloadAttributeFile(address)
+        const setName = getSetName(address)
+        return ann2rr(setName, extension)
+    end
+
+    function heartRateSeries(input)
+        const address = "http://www.physionet.org/physiobank/database/" * input
+        const stream = heartRateStream(address)
+        const lines = readlines(stream)
+        return map((x) -> int(strip(x)), lines)[2:]
+    end
+
+    export heartRateSeries, markovChainTransitions
 end
