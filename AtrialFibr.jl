@@ -13,11 +13,11 @@ module AtrialFibr
     @test classify(8, [7 12]) == 2
     @test classify(15, [7 12]) == 3
 
-    function normalizeMatrix(matrix)
+    function normalize(matrix)
         return matrix/sum(matrix)
     end
-    @test normalizeMatrix([5]) == [1]
-    @test_approx_eq normalizeMatrix([5 2; 1 2]) [0.5 0.2; 0.1 0.2]
+    @test normalize([5]) == [1]
+    @test_approx_eq normalize([5 2; 1 2]) [0.5 0.2; 0.1 0.2]
 
     function countTransitions(series)
         classified=zeros(Float64,3,3)
@@ -32,7 +32,7 @@ module AtrialFibr
     function markovChainTransitions(X)
         binned = evalIntervalNumbers(X)
         transitions = countTransitions(binned)
-        return normalizeMatrix(transitions)
+        return normalize(transitions)
     end
 
     function evalIntervalNumbers(X)
@@ -40,5 +40,33 @@ module AtrialFibr
         return map((x) -> classify(x,[m*0.85 m*1.15]), X)
     end
 
+    function entropy(A)
+        @assert size(A)[1] == size(A)[2]
+        H=zeros(3)
+        for i = 1:3
+            sum = 0
+            for j = 1:3
+                sum += A[i,j]*log(2,A[i,j])
+            end
+            H[i] = -sum
+        end
+
+        P = zeros(3)
+        for j = 1:3
+            sum = 0;
+            for i = 1:3
+                sum += A[i,j]
+            end
+            P[j] = sum
+        end
+
+        return dot(P,H)
+    end
+    @test entropy(normalize([1 1 1; 1 1 1; 1 1 1])) >= 1
+    @test entropy(normalize([1 1 1; 1 1 1; 1 1 1])) <= 1.06
+    @test entropy(normalize([1 1 1; 1 1e5 1; 1 1 1])) <= 0.01
+
     export markovChainTransitions
 end
+
+
