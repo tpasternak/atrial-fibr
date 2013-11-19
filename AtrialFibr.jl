@@ -42,22 +42,15 @@ module AtrialFibr
 
     function entropy(A)
         @assert size(A)[1] == size(A)[2]
-        H=zeros(3)
-        for i = 1:3
-            sum = 0
-            for j = 1:3
-                sum += A[i,j]*log(2,A[i,j])
-            end
-            H[i] = -sum
+        const n = size(A)[1]
+        H=zeros(n)
+        for i = 1:n
+            H[i] = map(x-> x*log(2,x), A[i,1:n]) |> sum |> -
         end
 
-        P = zeros(3)
-        for j = 1:3
-            sum = 0;
-            for i = 1:3
-                sum += A[i,j]
-            end
-            P[j] = sum
+        P = zeros(n)
+        for j = 1:n
+            P[j] = sum(A[1:n,j])
         end
 
         return dot(P,H)
