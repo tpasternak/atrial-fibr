@@ -36,13 +36,13 @@ function afPoint(set)
     return entropy, similarity
 end
 
-function afPoints(set)
-    redX = zeros(length(iafdb))
-    redY = zeros(length(iafdb))
-    for (i,set) in enumerate(iafdb)
-        redX[i],redY[i] = afPoint(set)
+function afPoints(sets)
+    x = zeros(length(sets))
+    y = zeros(length(sets))
+    for (i,set) in enumerate(sets)
+        x[i],y[i] = afPoint(set)
     end
-    return redX, redY
+    return x, y
 end
 
 function main()
