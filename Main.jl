@@ -40,20 +40,22 @@ function afPoints(sets)
     x = zeros(length(sets))
     y = zeros(length(sets))
     for (i,set) in enumerate(sets)
+        println("Processing set: " * set)
         x[i],y[i] = afPoint(set)
     end
     return x, y
 end
 
 function main()
-    iafdb = ["iafdb/iaf1_afw" "iafdb/iaf2_afw" "iafdb/iaf3_afw"]
+    iafdb = union( map(x -> "iafdb/iaf" *string(x) * "_afw", 1:10), map(x -> "iafdb/iaf" *string(x) * "_afw", 1:10))
     fantasia = ["fantasia/f1o06"]
 
     redX, redY = afPoints(iafdb)
     greenX, greenY = afPoints(fantasia)
-
     plot(redX, redY, "r.", greenX, greenY, "g.")
     file("figure.png")
+
+    println("FINISHED")
 end
 
 main()
