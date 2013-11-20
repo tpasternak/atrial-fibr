@@ -8,7 +8,7 @@ module DataDownloader
     @test getSetName("a/b/c") =="c"
 
     function downloadAttributeFile(address)
-        for extension in ["atr" "ecg"]
+        for extension in ["atr" "ecg" "qrs"]
             if(success(`wget -Nq $address.$extension`))
                 return extension
             end

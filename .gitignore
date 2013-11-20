@@ -1,5 +1,7 @@
 *.atr
 *.dat
 *.hea
+*.qrs
 *~
 *.ecg
+/iaf1_afw.qrs
