@@ -19,16 +19,6 @@ end
 
 const pattern = [0.056 0.114 0.062; 0.101 0.350 0.096; 0.060 0.114 0.035]
 
-function printParameters(set)
-
-    println("SET:        " * set)
-    print(  "ENTROPY:    ")
-
-    print(  "SIMILARITY: ")
-    println(Algebra.divergence(transitionsMatrix+ 0.00000001, pattern))
-    println()
-end
-
 function afPoint(set)
     const transitionsMatrix = heartRateTransitions(set) +0.000001 |> normalize
     entropy = Algebra.entropy(transitionsMatrix)
@@ -87,7 +77,7 @@ const fantasia = [
 	"fantasia/f2y08"
 	"fantasia/f2y09"
 	"fantasia/f2y10"]
-const iafdb = union( map(x -> "iafdb/iaf" *string(x) * "_afw", 1:8), map(x -> "iafdb/iaf" *string(x) * "_afw", 1:8))
+const iafdb = union( map(x -> "iafdb/iaf" *string(x) * "_afw", 1:8), map(x -> "iafdb/ivc" *string(x) * "_afw", 1:8))
 
 function main()
     redX, redY = afPoints(iafdb)

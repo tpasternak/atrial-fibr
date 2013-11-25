@@ -5,4 +5,5 @@
 *~
 *.ecg
 /iaf1_afw.qrs
-/figure.png
+*.png
+*.csv
