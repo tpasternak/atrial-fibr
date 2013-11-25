@@ -77,7 +77,7 @@ const fantasia = [
 	"fantasia/f2y08"
 	"fantasia/f2y09"
 	"fantasia/f2y10"]
-const iafdb = union( map(x -> "iafdb/iaf" *string(x) * "_afw", 1:8), map(x -> "iafdb/ivc" *string(x) * "_afw", 1:8))
+const iafdb = union( map(x -> "iafdb/iaf" *string(x) * "_afw", 1:8), map(x -> "iafdb/iaf" *string(x) * "_ivc", 1:8))
 
 function main()
     redX, redY = afPoints(iafdb)
